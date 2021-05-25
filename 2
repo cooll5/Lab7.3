@@ -1,0 +1,100 @@
+#include <iostream>
+#include <ctime>
+using namespace std;
+
+void Create(int** arr, int& rcount, int& colcount);
+void Print(int** arr, int& rcount, int& colcount);
+int** AddCols(int** arr, int& rcount, int& colcount, const int k, const int n);
+void Componovshchik(int** arr, int& rcount, int& colcount, int k, int n);
+int DiagonalSum(int** arr, int rcount, int colcount, int delta);
+
+int main()
+{
+    srand((unsigned)time(NULL));
+    int  k;
+    int n;
+    cout << "enter the number of rows in the matrix"; cin >> k; cout << endl;
+    cout << "enter the number of colimns in the matrix"; cin >> n; cout << endl;
+    int** arr = new int* [k];
+    for (int i = 0; i < k; i++)
+        arr[i] = new int[n];
+    cout << endl << "Created array:" << endl << endl;
+    Create(arr, k, n);
+    Print(arr, k, n);
+    cout << endl << endl;
+    Componovshchik(arr, k, n, k, n);
+    for (int i = 0; i < k; i++)
+        delete[] arr[i];
+    delete[] arr;
+    system("pause");
+    return 0;
+}
+
+void Create(int** arr, int& rcount, int& colcount)
+{
+    for (int i = 0; i < rcount; i++)
+        for (int j = 0; j < colcount; j++)
+            arr[i][j] = (rand() % 25) - 4;
+}
+void Print(int** arr, int& rcount, int& colcount)
+{
+    for (int i = 0; i < rcount; i++)
+    {
+        for (int j = 0; j < colcount; j++)
+        {
+            cout << arr[i][j] << "\t";
+        }
+        cout << endl;
+    }
+    cout << endl << endl;
+}
+void Componovshchik(int** arr, int& rcount, int& colcount, int k, int n)
+{
+    arr = AddCols(arr, rcount, colcount, k, n);
+    int max = DiagonalSum(arr, k, n, 0);
+    cout << "Diagonal which starts with " << arr[0][0] << " on the top: sum: " << max << endl;
+    for (size_t i = 1; i <  n; i++)
+    {
+        int s = DiagonalSum(arr, k, n, i);
+        cout << "Diagonal which starts with " << arr[0][i] << " on the top: sum: " << s << endl;
+        if (s > max)max = s;
+    }
+    cout << endl << endl << "The maximum of sums of diagonals is " << max << endl;
+}
+int DiagonalSum(int** arr, int rcount, int colcount, int delta)
+{
+    int sum = 0;
+    for (size_t i = 0; i < rcount; ++i)
+    {
+        sum += arr[i][i + delta];
+    }
+    return sum;
+}
+int** AddCols(int** arr, int& rcount, int& colcount, const int k, const int n)
+{
+    int j = 0;
+    for (size_t l = 0; l <  k - 1; l++)
+    {
+        if (j >= n) j = j % n;
+        int** arr2 = new int* [rcount];
+        for (int i = 0; i < rcount; i++) arr2[i] = new int[colcount + 1];
+        for (size_t i = 0; i < rcount; i++)
+        {
+            for (size_t m = 0; m < colcount; m++)
+            {
+                arr2[i][m] = arr[i][m];
+            }
+        }
+
+
+        for (size_t i = 0; i < rcount; i++)
+        {
+            arr2[i][colcount] = arr[i][j];
+        }
+        arr = arr2;
+        colcount++;
+        j++;
+    }
+    Print(arr, rcount, colcount);
+    return arr;
+}
