@@ -1,0 +1,67 @@
+#include <iostream>
+#include <ctime>
+#include <iomanip>
+using namespace std;
+void Creator(int**, int, int);
+void Printer(int**, int, int);
+void Task(int**, int, int);
+void main()
+{
+	srand((unsigned)time(NULL));
+	int  k;
+	int n;
+	cout << "enter the number of rows in the matrix: "; cin >> k; cout << endl;
+	cout << "enter the number of columns in the matrix: "; cin >> n; cout << endl;
+
+	int** arr = new int* [k];
+	for (int i = 0; i < k; i++)
+		arr[i] = new int[n];
+
+	Creator(arr, k, n);
+	cout << endl << "Created array: " << endl << endl;
+	Printer(arr, k, n);
+	cout << endl << endl;
+	cout << "Task: " << endl << endl;
+	Task(arr, k, n);
+	cin.ignore();
+	cin.get();
+}
+void Creator(int** arr, int rows, int cols)
+{
+	for (size_t i = 0; i < rows; i++)
+		for (size_t j = 0; j < cols; j++)
+			arr[i][j] = (rand() % 25) - 3;
+}
+void Printer(int** arr, int rows, int cols)
+{
+	for (size_t i = 0; i < rows; i++)
+	{
+		for (size_t j = 0; j < cols; j++)
+			cout << arr[i][j] << '\t';
+		cout << endl;
+	}
+}
+
+void Task(int** arr, int rows, int cols)
+{
+	for (size_t i = 0; i < rows; i++)
+	{
+		int P = 1;
+		for (size_t j = 0; j < cols; j++)
+		{
+			if (arr[i][j] > 0)
+			{
+				P *= arr[i][j];
+			}
+			else
+			{
+				P = -1;
+				break;
+			}
+		}
+		if (P != -1)
+			cout << "Row # " << i << ": P = " << P << endl;
+		else
+			cout << "There are numbers in the row which don't satisfy the condition." << endl;
+	}
+}
