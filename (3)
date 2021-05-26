@@ -1,0 +1,91 @@
+#include <iostream>
+#include <ctime>
+#include <iomanip>
+using namespace std;
+
+void Create(int** arr, int rcount, int colcount, int i);
+void createutil(int** arr, int rcount, int colcount, int i, int j = 0);
+void Print(int** arr, int rcount, int colcount, int i);
+void printutil(int** arr, int rcount, int colcount, int i, int j);
+void recTask(int** arr, int rcount, int colcount, int i);
+int P(int** arr, int rcount, int colcount, int i, int j, int p);
+void main()
+{
+	srand((unsigned)time(NULL));
+	int  k;
+	int n;
+	cout << "enter the number of rows in the matrix: "; cin >> k; cout << endl;
+	cout << "enter the number of columns in the matrix: "; cin >> n; cout << endl;
+
+	int** arr = new int* [k];
+	for (int i = 0; i < k; i++)
+		arr[i] = new int[n];
+
+	Create(arr, k, n, 0);
+	cout << endl << "Created array: " << endl << endl;
+	Print(arr, k, n, 0);
+	cout << endl << endl;
+	cout << "Task: " << endl << endl;
+	recTask(arr, k, n, 0);
+	cin.ignore();
+	cin.get();
+}
+void Create(int** arr, int rcount, int colcount, int i)
+{
+	if (i < rcount) {
+		//  int j = 0;
+		createutil(arr, rcount, colcount, i, 0);
+		Create(arr, rcount, colcount, i + 1);
+	}
+	else return;
+}
+void createutil(int** arr, int rcount, int colcount, int i, int j)
+{
+	if (j < colcount)
+	{
+		arr[i][j] = (rand() % 25) - 3;
+		createutil(arr, rcount, colcount, i, j + 1);
+	}
+}
+void Print(int** arr, int rcount, int colcount, int i)
+{
+	if (i < rcount)
+	{
+		printutil(arr, rcount, colcount, i, 0);
+		cout << endl;
+		Print(arr, rcount, colcount, i + 1);
+	}
+	else return;
+
+}
+void printutil(int** arr, int rcount, int colcount, int i, int j)
+{
+	if (j < colcount)
+	{
+		cout << arr[i][j] << "\t";
+		printutil(arr, rcount, colcount, i, j + 1);
+	}
+	else return;
+}
+
+void recTask(int** arr, int rcount, int colcount, int i)
+{
+	if (i < rcount)
+	{
+		int p = P(arr, rcount, colcount, i, 0, 1);
+		if (p != -1) cout << "Row # " << i << ": P = " << p << endl;
+		else cout << "There are numbers in the row which don't satisfy the condition." << endl;
+		recTask(arr, rcount, colcount, i + 1);
+	}
+	else return;
+}
+int P(int** arr, int rcount, int colcount, int i, int j, int p)
+{
+	if (j < colcount)
+	{
+		if (arr[i][j] >= 0)
+			return P(arr, rcount, colcount, i, j + 1, p * arr[i][j]);
+		else return -1;
+	}
+	else return p;
+}
